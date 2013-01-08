@@ -4,6 +4,18 @@
             <form id="booking-form" method="post" action="<?=base_url('band/booking/' . $band['seo'] . '.html');?>">
                 <input type="hidden" name="data[band_id]" value="<?=$band['id'];?>" />
                 <div class="item clearfix">
+                    <div class="label">
+                        <div class="thumb2 right">
+                            <a href="<?=base_url() . 'band/' . $band['seo'] . '.html';?>"><? if (isset($band['photo'])) {?><img src="<?=$band['photo'];?>"  alt="" /><? } ?></a>
+                        </div>
+                    </div>
+                    <p>
+                        <span class="name"><?=$band['name']?></span><br /><br />
+                        <span class="amount">$<?=price_view($band['price']);?></span><br/>
+                        two 20 minutes sets
+                    </p>
+                </div>
+                <div class="item clearfix">
                     <label>Date of gig:</label>                
                     <p class="datewrap">
                         <input class="txt date icon idate" type="text" name="data[gig_date]" value=""  tabindex="1"   />

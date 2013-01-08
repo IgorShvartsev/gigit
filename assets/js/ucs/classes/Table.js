@@ -3,7 +3,7 @@
 * @version 1.09  october 2012
 * @author (c)Igor Shvartsev <igor.shvartsev@gmail.com>
 *
-* Usage :  var table = new ucsTable(options).setData(data)
+* Usage :  var table = new ucs.Table(options).setData(data)
 *
 * data structure returned is a json type and has following format
 * {

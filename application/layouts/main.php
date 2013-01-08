@@ -17,12 +17,17 @@
             </div>
             <?=partial('menu/menu_top');?>
             <?=partial('shared/loginout');?>
-            <div class="register">
-              <? if (!isset($registration)) { 
-                   if (!bandLoggedIn()) { ?> 
-                    Are you a band? <a href="<?=base_url('socials/provider/facebook?redirect=band/registration');?>" onclick="window.open(this.href, 'auth', 'width=600,height=400'); return false;" class="link2">Register now</a>
-                <? }
-                } 
+            <div class="login">
+              <? if (($login = isLoggedIn()) == false) { 
+                    if (!isset($registration)) { 
+                        if (!bandLoggedIn()) { ?> 
+                        Are you a band? <a href="<?=base_url('registration/band');?>" class="link2">Register now</a>
+                    <? }
+                    }
+                 } else {?>
+                    <?=$login['name'];?> &nbsp;&nbsp;<a href="<?=base_url('auth/logout');?>">Logout</a> <br />
+                    <? if (bandLoggedIn()) { ?> <a href="<?=base_url('band/profile');?>" class="link2">Edit profile</a> <? } ?>
+              <?} 
                 ?>
             </div>
         </div>

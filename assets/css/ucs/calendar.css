@@ -1,0 +1,28 @@
+.ucs-calendar{}
+.ucs-calendar .calendar-overlay{background: #fff;}
+.ucs-calendar .cprev-month{left:0;top:5px;cursor:pointer;}
+.ucs-calendar .cprev-month.disabled{cursor: default;}
+.ucs-calendar .cnext-month{right:0;top:5px;cursor:pointer;}
+.ucs-calendar .cdays, .ucs-calendar .cweeks{clear:both;}
+.ucs-calendar .cdays span{float:left;display:block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.ucs-calendar .cweeks .cday{float:left;border-radius:4px;-moz-border-radius:4px;    -webkit-border-radius:4px;background: #CCECF0;border:1px solid #CCECF0;cursor:default;padding:2px;margin:2px;width:46px;}
+.ucs-calendar .cweeks .cday:hover{background:#F7FDBB;}
+.ucs-calendar .cweeks .cday span{display:block;}
+.ucs-calendar .cweeks .cday .st{color:#0B778A;font-size: 10px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.ucs-calendar .cweeks .next_days, .ucs-calendar .cweeks .prev_days{opacity:0.4;filter:alpha(opacity=40);} 
+.ucs-calendar .cweeks .unavailable{background: #ccc;border:1px solid #ccc;}
+.ucs-calendar .cweeks .unavailable .st{color:#fff;}
+.ucs-calendar .cweeks .unavailable:hover{background:#F7FDBB;}
+.ucs-calendar .cweeks .unavailable:hover .st{color:#444;}
+.ucs-calendar .cweeks .inactive{opacity:0.2;filter:alpha(opacity=30);cursor:default !important;}
+.ucs-calendar .cprev-month, .ucs-calendar .cnext-month{width:24px;height:24px;text-indent: -9000px;opacity:0.7;filter:alpha(opacity=70);}
+.ucs-calendar .cprev-month:hover, .ucs-calendar .cnext-month:hover{opacity:1;filter:alpha(opacity=100);}
+.ucs-calendar .cprev-month{background: url('../../images/ucsCalendar/l-arr.png') no-repeat;}
+.ucs-calendar .cnext-month{background: url('../../images/ucsCalendar/r-arr.png') no-repeat;}
+.ucs-calendar.editmode .cweeks .cday{cursor: pointer;}
+
+.ucs-calendar.cdefault{height:340px;width:400px;font-family: Arial;}
+.ucs-calendar.cdefault .cmonth-year{padding:5px;font-size: 16px; font-weight: bold;}
+.ucs-calendar.cdefault .cdays{font-size: 11px;font-weight:bold;padding:5px 0;}
+.ucs-calendar.cdefault .cdays span{width:52px;text-align: center;margin:0 2px;}
+.ucs-calendar.cdefault .cnext-month{margin-right:5px;}

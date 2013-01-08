@@ -8,16 +8,15 @@ ucs.Popup = ucs.Dialog.extend({
     construct : function( options, callback) {
         options = typeof options == 'object' ? options : {};
         options = $.extend(true, {
-            cssSubmit : {display:'none'},
-            onSubmit : function(){}
+           cssFormContent : {'background' : '#fff', 'padding' : '10px'} 
         }, options);
         this.parent(options);
         var dlg = this.dlg;
-        var formcontent = dlg.find('.formcontent');
-        $('<div/>',{'class':'popup-content'}).appendTo(formcontent);
+        dlg.find('form').remove();
+        var formcontent = $('<div/>', {'class' : 'formcontent', 'css' : options.cssFormContent}).appendTo(dlg.find('.wrapper-dialog-ucs'));
     },
     show : function(html) {
-        this.dlg.find('.popup-content').html(html);
+        this.dlg.find('.formcontent').html(html);
         this.parent();
     },
     setCallback : function(func) {

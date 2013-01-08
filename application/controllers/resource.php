@@ -1,6 +1,5 @@
-<?php
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
 *  Resource Controller
 */
@@ -74,6 +73,7 @@ class Resource extends MX_Controller {
     {
         header('Content-type: text/javascript;charset=utf-8');
         $type = $this->input->get('t');
+        $module = $this->input->get('md');
         if (empty($type)) {
             echo '/*Interface type not defined*/';
             return;
@@ -83,10 +83,12 @@ class Resource extends MX_Controller {
             echo '/*Passed params damaged*/';
             return;
         }
-        foreach($params as $param => $val) {
-            $this->mysmarty->assign($param, $val);
-        }
-        echo file_exists(APPPATH . "views/js/$type-js.tpl") ? $this->mysmarty->fetch("js/$type-js.tpl") :  '/*Unknown interface type*/';
+        $jsResource = empty($module) ? (APPPATH. "views/js/$type-js.php") : (APPPATH. "modules/" . $module . "/views/js/$type-js.php") ;
+        if (file_exists($jsResource)) {
+            empty($module) ? $this->load->view("js/$type-js.php", $params) : $this->load->view($module . "/js/$type-js.php", $params);
+        } else{
+            echo '/*Unknown interface*/';  
+        } 
     }
     
 }

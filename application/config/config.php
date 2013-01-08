@@ -265,14 +265,14 @@ $config['encryption_key'] = md5($_SERVER['HTTP_HOST']."DFy234Lki0987ge12");
 |
 */
 $config['sess_cookie_name']		= 'ci_session';
-$config['sess_expiration']		= 9800;
+$config['sess_expiration']		= 0;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= TRUE;
 $config['sess_use_database']	= FALSE;
 $config['sess_table_name']		= 'sessions';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= TRUE;
-$config['sess_time_to_update']	= 9800;
+$config['sess_time_to_update']	= 2400000;
 
 /*
 |--------------------------------------------------------------------------
@@ -389,17 +389,27 @@ $config['modules_locations'] = array(
 
 /*
 |--------------------------------------------------------------------------
+| Theme (images folder)
+|--------------------------------------------------------------------------
+|
+*/
+$config['theme'] = 'default';
+
+/*
+|--------------------------------------------------------------------------
 | Loading resources
 |--------------------------------------------------------------------------
 |
 */
 $config['resource']['js']  = array(
-                            'jquery/jquery-1.6.2.min.js', 
-                            'jquery/jquery-ui-1.9.2.custom.min.js', 
+                            'jquery/jquery-1.7.1.min.js', 
+                            'jquery/jquery-ui-1.9.2.custom.min.js',
+                            'jquery/jquery.ba-hashchange.min.js', 
                              'ucs/ucs.js',
                              'ucs/classes/Dialog.js',
                              'ucs/classes/Promt.js',
                              'ucs/classes/Popup.js',
+                             'ucs/classes/Calendar.js',
                              'all.js',
                              'script.js',
                              'html5.js'

@@ -2,11 +2,15 @@
 
 class MX_Controller_Admin extends MX_Controller 
 {
+     public $data = array(
+        'menu' => ''
+     );
+     
      public function __construct()
      {
+        $this->data['menu'] = strtolower(get_class($this)); 
         parent::__construct(); 
-        $this->load->model('users');
-        if (!$this->users->isAdmin()) {
+        if (!adminLoggedIn()) {
             redirect('admin/auth/login');
         }
         $this->layout->set_layout('admin');

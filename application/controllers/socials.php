@@ -6,7 +6,7 @@ class Socials extends MX_Controller {
         'facebook' => array('user_photos','user_birthday','email','user_location')
     );
     
-    protected $providers = array('facebook');
+    protected $socials = array('facebook');
     
     public function __construct()
     {
@@ -19,10 +19,10 @@ class Socials extends MX_Controller {
         redirect();
 	}
     
-    public function provider($provider)
+    public function provider($social)
     {
-         $provider =  strtolower($provider);
-         if (!in_array($provider, $this->providers)) {
+         $social =  strtolower($social);
+         if (!in_array($social, $this->socials)) {
              redirect();
              exit();
          }
@@ -30,22 +30,22 @@ class Socials extends MX_Controller {
          $scope     = $this->input->get('scope');
          if (!empty($redirect)) {
             $this->session->set_userdata('redirect', $redirect); 
-            redirect('socials/provider/' . $provider);
+            redirect('socials/provider/' . $social);
             exit();
          }
-         $config = $this->config->item($provider);
+         $config = $this->config->item($social);
 
          if (!empty($scope)) {
              $config['scope'] = $scope;
-         } else if (isset($this->scope[$provider])) {
-             $config['scope'] = $this->scope[$provider];
+         } else if (isset($this->scope[$social])) {
+             $config['scope'] = $this->scope[$social];
          }
          $params = array();
-         if ($provider == 'facebook') {
+         if ($social == 'facebook') {
              $params['display']     = 'popup';
          } 
          
-         $provider = $this->oauth2->provider($provider, $config);
+         $provider = $this->oauth2->provider($social, $config);
          if (!$this->input->get('code') && !$this->input->get('oauth_token'))
          {
             if ($this->input->get('error')) {
@@ -54,33 +54,35 @@ class Socials extends MX_Controller {
                 exit();
                 return;
             } 
+            // authorization
             $url = $provider->authorize(array(), $params);
             redirect($url);
          }
          else
          { 
+            // accept operation 
             try
             {
                 $code = $this->input->get('code') ? $this->input->get('code') :  $this->input->get('oauth_token');                            
                 $token = $provider->access($code);
-                $this->session->set_userdata('facebook', array('access_token' => $token->access_token, 'expires_in' => $token->expires_in));
                 $user = $provider->get_user_info($token);
-
-                echo "<pre>Tokens: ";
-                var_dump($token);
-
-                echo "\n\nUser Info: ";
-                var_dump($user);
+                $this->session->set_userdata($social, array(
+                    'access_token' => $token->access_token, 
+                    'expires_in'   => $token->expires_in,
+                    'user'         => (array)$user
+                ));
                 
-                echo '<script type="text/javascript">
+                //print_r($token);
+               
+               // redirect and close 
+               echo '<script type="text/javascript">
                             opener.location.href="' . base_url($this->session->userdata('redirect')) . '";
                             window.close();
                        </script>';
             }
-
             catch (OAuth2_Exception $e)
             {
-                show_error('That didnt work: '.$e);
+                show_error('Something wrong: '.$e);
             }
          }
     }

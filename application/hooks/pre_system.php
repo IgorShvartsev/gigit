@@ -19,6 +19,7 @@ class Pre_System
     public function init()
     {
        $CI = &get_instance(); 
+       defined('THEME') OR define('THEME', $CI->config->item('theme'));
        $session_id = $CI->session->userdata('session_id');
        if (!$session_id) {
            $CI->session->set_userdata('session_id', md5(uniqid()));

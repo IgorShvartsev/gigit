@@ -3,7 +3,7 @@
 /**
 *  Model Bands
 */
-class Bands extends CI_Model {
+class Bands extends MY_Model {
     
      protected $fields = array(); 
      /**
@@ -16,8 +16,9 @@ class Bands extends CI_Model {
          $query = $this->db->query('SHOW COLUMNS FROM `bands`');
          $r = $query->result();
          foreach($r as $row) {
-             if ($row->Field == 'id' || $row->Field == 'description' || $row->Field == 'password' || $row->Field == 'email'  || $row->Field == 'session' || $row->Field == 'active' || $row->Field == 'temp') continue;
+             if ($row->Field == 'id') continue;
              $this->fields[] = $row->Field;
+             $this->fields = array_merge($this->fields, array('genre'));
          }
      }
      
@@ -27,9 +28,13 @@ class Bands extends CI_Model {
      * @param numeruc $id
      * @return array or false
      */
-     public function get($id)
+     public function get($id, $onlyActive = true)
      {
-         $res = $this->db->get_where('bands', array('id' => $id, 'active' => 1, 'temp' => 0))->result_array();
+         $where['id'] = $id;
+         if ($onlyActive && !is_array(adminLoggedIn())) {
+             $where['active'] = 1;
+         }
+         $res = $this->db->get_where('bands', $where)->result_array();
          if (count($res) > 0) {
              $data = $res[0];
              $data['genres'] = array();
@@ -61,7 +66,29 @@ class Bands extends CI_Model {
              foreach($r as $row) {
                 $data['tags'][] = $row['tag'];
              } 
+             $photo = APPPATH . '../uploads/bands/' . $data['id']. '/photo/photo_t.jpg';
+             if (file_exists($photo)) {
+                $data['photo'] = base_url().'uploads/bands/' . $data['id'] . '/photo/photo_t.jpg';
+             } else {
+                $data['photo'] = base_url() . 'assets/images/' . THEME . '/nophoto.png';   
+             } 
              return $data;
+         }
+         return false;
+     }
+     
+     
+     /**
+     * Get account by id criteria
+     * 
+     * @param numeric $id
+     * @return array or false
+     */
+     public function getAccount($id)
+     {
+         $res = $this->db->get_where('bands', array('id' => $id))->result_array();
+         if (count($res) > 0) {
+             return $res[0];
          }
          return false;
      }
@@ -71,11 +98,30 @@ class Bands extends CI_Model {
      * Get band by seo criteria
      * 
      * @param string $seo
-     * @return array
+     * @return array or false
      */
      public function getBySEO($seo)
+     {  
+         $where['seo'] = $seo; 
+         if (!is_array(adminLoggedIn())) {
+            $where['active'] = 1;
+         }
+         $res = $this->db->get_where('bands', $where)->result_array();
+         if (count($res) > 0) {
+             return $this->get($res[0]['id']);
+         }
+         return false;
+     }
+     
+     /**
+     * Get band by email criteria
+     * 
+     * @param string $email
+     * @return array
+     */
+     public function getByEmail($email)
      {
-         $res = $this->db->get_where('bands', array('seo' => $seo, 'active' => 1, 'temp' => 0))->result_array();
+         $res = $this->db->get_where('bands', array('email' => $email))->result_array();
          if (count($res) > 0) {
              return $this->get($res[0]['id']);
          }
@@ -102,9 +148,9 @@ class Bands extends CI_Model {
                  }
              } else {
                  $by = 'asc';
-                 if ($data['sort'] == 'fanbase') {
+                 if ($data['sort'] == 'fanbase' || $data['sort'] == 'create_date') {
                      $by = 'desc';
-                 }
+                 } 
                  $order_by[$data['sort']] = $by;
              }
          }
@@ -113,7 +159,7 @@ class Bands extends CI_Model {
                 $where[$data['show']] = 1; 
              }
          }
-         $where = array_merge($where, array('active' => 1, 'temp' => 0));
+         $where = array_merge($where, array('active' => 1));
          $page = isset($data['p']) ? $data['p'] : 1;
          $perpage = $this->config->item('perpage');
          $total = $this->getTotal($where, $where_or, $search);
@@ -147,7 +193,7 @@ class Bands extends CI_Model {
             // WHERE
             $this->_makeWhere($where, $where_or, $search);
             
-            $allowedFieds = array_merge($this->fields, array('genre'));
+            $allowedFieds = array('genre', 'name', 'price', 'featured', 'fanbase', 'create_date');
             // ORDER BY
             if (is_array($order_by)) {
                 foreach($order_by as $k => $v) {
@@ -157,7 +203,7 @@ class Bands extends CI_Model {
                 }
             } else {
                 $this->db->order_by('bands.id','DESC');
-            }         
+            }
             
             // GROUP BY 
             $this->db->group_by('bands.id');
@@ -182,7 +228,9 @@ class Bands extends CI_Model {
                 $photo = APPPATH . '../uploads/bands/' . $row['id']. '/photo/photo_t.jpg';
                 if (file_exists($photo)) {
                     $row['photo'] = base_url().'uploads/bands/' . $row['id'] . '/photo/photo_t.jpg';
-                }
+                } else {
+                    $row['photo'] = base_url() . 'assets/images/'.THEME.'/nophoto.png';   
+                } 
             
                 $data[$row['id']] = $row;
             }
@@ -254,145 +302,79 @@ class Bands extends CI_Model {
      }
      
      /**
-     * Get temporary account using current session_id
+     * Get genre list
      * 
-     * @return array or false
+     * @return array
      */
-     public function getTempAccount()
+     public function getGenres()
      {
-         $session_id = $this->session->userdata('session_id');
-         if ($session_id) {
-             $res = $this->db->get_where('bands', array('session' => $session_id))->result_array();
-             if ($res) {
-                 return $this->get($res[0]['id']);
-             }
-         }
-         return false;
+         return $this->db->get('genres')->result_array();
      }
      
      /**
-     * Create temporary account useing session Id
+     * Create account 
      * 
-     * @return array;
+     * @param array $data
+     * @return numeric  or  array or 0,  where 0 - error, array - data of already existed band, numeric - insert id
      */
-     public function createTempAccount()
+     public function createAccount($data)
      {
-         $session_id = $this->session->userdata('session_id');
-         if ($session_id) {
-             $res = $this->db->get_where('bands', array('session' => $session_id))->result_array();
-             if ($res) {
-                 return $this->get($res[0]['id']);
-             }
-             $this->db->insert('bands', array('session' => $session_id));
-             return $this->get($this->db->insert_id());
-         } else {
-             trigger_error('session_id is not exists as session var');
-         } 
-         return false;
+        if (!isset($data['email'])) {
+            return 0;
+        }
+        $res = $this->db->get_where('bands', array('email' => $data['email']))->result_array();
+        if (count($res) > 0) {
+            return $res[0];
+        }
+        $res = $this->db->where('email', $data['email'])
+                        ->from('users')
+                        ->count_all_results();
+        if ($res) {
+            return 0;
+        }
+        $data = $this->_validate($data);
+        $data['active'] = 0;
+        $data['create_date'] = date('Y-m-d H:i:s');
+        $seoExists = false;
+        if (isset($data['name'])) {
+            $data['seo'] = toSeoString($data['name']);
+            $seoExists = $this->db->where('seo', $data['seo'])
+                                  ->from('bands')
+                                  ->count_all_results();
+        }
+        $this->db->insert('bands', $data);
+        if ($seoExists) {
+            $id = $this->db->insert_id();
+            $data['seo'] .= "-" . $id;
+            $this->db->where('id', $id)
+                     ->update('bands', array('seo' => $data['seo']));
+        }
+        return $this->db->insert_id();
      }
      
      /**
-     * Activate temporary account (this is final step in the registration process)
+     * Activate account 
      * 
      * @param numeric $id
      */
-     public function activateTempAccount($id)
+     public function activateAccount($id)
      {
          $this->db->where('id', $id);
-         $this->db->update('bands', array('temp' => 0));
+         $this->db->update('bands', array('active' => 1));
      }
      
      
-     
-     /**
-     * Make where clause for Active Records or build sql where string
-     * 
-     * @param array $where       -  clause with AND , if value is array then values of this array treated as where_in clause
-     * @param array $where_or    -  clause with OR
-     * @param mixed $search      -  search pattern , can be either string or array 
-     */
-     protected function _makeWhere($where = array(), $where_or = array(), $search = '', $output = false)
+     protected function _validate($data)
      {
-            $whereAND    = array();
-            $whereOR     = array();
-            $where_in    = array();
-            $where_like  = array();
-            $allowedFieds = array_merge($this->fields, array('genre'));
-            
-            // where clause
-            if (is_array($where)) {
-                foreach($where as $k => $v) {
-                    if (in_array($k, $allowedFieds)) {
-                        if (is_array($v)) {
-                            $where_in[$k] = $v;
-                            continue; 
-                        }
-                        $whereAND[$k] = $v;
-                    }
-                }
-                if (count($whereAND) > 0) {
-                    $this->db->where($whereAND);
-                }
-            }
-            
-            // where clause with OR
-            if (is_array($where_or)) {
-                foreach($where_or as $k => $set) {
-                    if (is_array($set) && count($set) > 0) {
-                        $temp = array();
-                        foreach($set as $v ) {
-                            $temp[] = $k . ' = ' . $this->db->escape($v);   
-                        }
-                        $whereOR[] = "(" . implode(' OR ', $temp) . ")";
-                    }
-                }
-                if (count($whereOR) > 0) {
-                    foreach($whereOR as $w) {
-                        $this->db->where($w, NULL, false);
-                    }
-                }
-            }
-            
-            // search
-            if (!empty($search)) {
-                if (is_array($search) && count($search) > 0) {
-                    foreach($search as $field=>$val) {
-                        if (in_array($field, $allowedFieds) && !empty($val)) {
-                            $where_like[] = $field . ' LIKE ' . $this->db->escape('%'.$val.'%') ; 
-                        }
-                    }
-                } else {
-                    foreach($allowedFieds as $field) {
-                        $where_like[] = $field . " LIKE '%" . $this->db->escape_like_str($search) . "%'" ; 
-                    }
-                }
-                if (count($where_like) > 0 ) {
-                    $this->db->where('(' . implode(' OR ', $where_like) . ')', NULL, false);
-                }            
-            }
-            
-            $result = '';
-            if ($output) {
-                // generate where string from ar cache
-                if (count($this->db->ar_where) > 0 OR count($this->db->ar_like) > 0){
-                    $result .= "\nWHERE ";
-                }
-                
-                $result .= implode("\n", $this->db->ar_where);
-                
-                if (count($this->db->ar_like) > 0)
-                {
-                    if (count($this->db->ar_where) > 0)
-                    {
-                        $result .= "\nAND ";
-                    }
-
-                    $result .= implode("\n", $this->dbar_like);
-                }
-                // empty ar cache
-                $this->db->flush_cache();
-            }
-            return $result;
+         $validDate = array();
+         if (is_array($data)) {
+             foreach($data as $field => $val) {
+                 if (in_array($field, $this->fields)) {
+                     $validDate[$field] = trim(strip_tags($val));
+                 }
+             }
+         }
+         return $validDate;
      }
      
 }

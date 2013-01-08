@@ -1,5 +1,32 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+
+/**
+* Checks if request is XmlHttp
+* 
+*/
+if ( ! function_exists('isXmlHttpRequest')) 
+{
+    function isXmlHttpRequest()
+    {
+        return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
+    }
+}
+
+/**
+* Get current theme
+* 
+* @return string
+*/
+if ( ! function_exists('get_theme')) 
+{
+    function get_theme()
+    {
+        $CI = &get_instance();
+        return $CI->config->item('theme');
+    }
+}
+
 /**
 *  price_view 
 *  Format price 
@@ -118,6 +145,38 @@ if ( ! function_exists('userLoggedIn'))
     {
         $CI = &get_instance();
         $logindata = $CI->session->userdata('logindata');
-        return is_array($logindata) && $logindata['role'] == 'user' ?  $logindata : false;    
+        return is_array($logindata) && ($logindata['role'] == 'user' || $logindata['role'] == 'admin' || $logindata['role'] == 'moderator' )?  $logindata : false;    
     }
-}     
+}
+
+
+if ( ! function_exists('adminLoggedIn'))
+{  
+    function adminLoggedIn()
+    {
+        $CI = &get_instance();
+        $logindata = $CI->session->userdata('admindata');
+        return is_array($logindata) && ($logindata['role'] == 'admin' || $logindata['role'] == 'moderator')?  $logindata : false;    
+    }
+}
+
+if ( ! function_exists('moderatorLoggedIn'))
+{  
+    function moderatorLoggedIn()
+    {
+        $CI = &get_instance();
+        $logindata = $CI->session->userdata('admindata');
+        return is_array($logindata) && $logindata['role'] == 'moderator' ?  $logindata : false;    
+    }
+}
+
+
+if ( ! function_exists('isLoggedIn'))
+{  
+    function isLoggedIn()
+    {
+        $CI = &get_instance();
+        $logindata = $CI->session->userdata('logindata');
+        return is_array($logindata) ?  $logindata : false;    
+    }
+}               

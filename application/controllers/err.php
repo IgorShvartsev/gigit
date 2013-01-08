@@ -6,11 +6,11 @@ class Err extends MX_Controller {
     {
         $this->layout->disable_layout();
     }
-	public function index( $status )
+	public function index( $status = '404' )
 	{
 	    $this->output->set_status_header((int)$status);
         $data = array( 
-            'description' => 'Page no found',
+            'description' => 'Page not found',
             'type'        =>  (int)$status
         );
         $this->load->view('error', $data);

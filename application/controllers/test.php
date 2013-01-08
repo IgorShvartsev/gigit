@@ -2,9 +2,13 @@
 
 class Test extends MX_Controller {
 
+    public function __construct()
+    {
+         $this->layout->disable_layout();
+    }
+    
 	public function index()
-	{
-        $this->layout->disable_layout();
+	{ 
 		echo 'test';
         $this->load->module('band');
         $this->load->model('bands');
@@ -15,8 +19,16 @@ class Test extends MX_Controller {
     
     public function my()
     {
-       $this->layout->disable_layout();
        echo 'te';
+    }
+    
+    public function calendar()
+    {
+        //$this->load->library('busycalendar');
+        //print_r($this->busycalendar->weeks());
+        $this->load->model('band/calendar','','calendar');
+        $data = $this->calendar->getdata(1, array());
+        print_r($data);
     }
 }
 

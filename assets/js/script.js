@@ -12,6 +12,7 @@ $(function(){
     
     // popup dialog
     popupDlg = new ucs.Popup({
+        css  : {width : '550px'},
         name : 'popup',
         overlay : {use :true},
         draggable : false     
@@ -19,7 +20,10 @@ $(function(){
         dlg.find('.close').click();
     });
     
+    // date picker
     $(".date").datepicker({dateFormat: 'mm/dd/yy'});
+    
+    // label inside input and textarea
     $('input[type="text"], textarea').focus(function(){
         var el = $(this);
         if (el.attr('data') && el.attr('data') == el.val()) {
@@ -36,7 +40,18 @@ $(function(){
            el.val(el.attr('data')); 
         }
     }); 
-     
+    
+    // tabs
+    $('.tab a').click(function(){
+        var tab = $(this);
+        var p = tab.parent().parent();
+        tab.siblings().removeClass('active').each(function(){
+            var t = $(this);
+            p.find(t.attr('href')).hide();
+        }).end().addClass('active');
+        p.find(tab.attr('href')).show();
+        return false;
+    }); 
     
 });
 

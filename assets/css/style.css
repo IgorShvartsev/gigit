@@ -19,7 +19,12 @@ img{border:0;}
 .brd{border:1px solid #aaa;}
 .brd-lr{border-left:1px solid #aaa;border-right:1px solid #aaa;}
 .span-bg{background: #ebebeb;padding: 1px 4px;}
-small{font-size: 10px;}
+small, .small{font-size: 10px;}
+strong{font-weight:bold;}
+.text ol{list-style-type:decimal;margin:4px 0 4px 18px;}
+.text ol li{padding:2px 0;}
+.center{margin:0 auto;text-align: center;}
+.error{color:#f00;font-size:12px;padding:8px 0;}
 
 .link2{color:#3871C1;}
 
@@ -42,6 +47,7 @@ small{font-size: 10px;}
 .grad-3{background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fff), color-stop(100%, #e0e0e0)); background-image: -webkit-linear-gradient(#fff, #e0e0e0); background-image: -moz-linear-gradient(#fff, #e0e0e0); background-image: -o-linear-gradient(#fff, #e0e0e0); background-image: linear-gradient(#fff, #e0e0e0); -webkit-transition: background-position 0.3s; -moz-transition: background-position 0.3s; -o-transition: background-position 0.3s; transition: background-position 0.3s;background-color: #fff;}
 
 .btn{display:block; padding:10px 10px; cursor:pointer;text-align: center;}
+.btn2{background: #3871C1;color:#fff;outline:none;border:1px solid #777;display:block;width:180px;padding:8px 0;cursor:pointer;text-align: center;font-weight:bold;}
 
 /* Icons */
 .icon{background-image: url('../images/default/icons.png');background-repeat: no-repeat;display:block;}
@@ -50,11 +56,14 @@ small{font-size: 10px;}
 
 #headwrap, #footerwrap, #mainwrap, #subwrap{width:990px;margin:0 auto;}
 #headwrap{height:80px;position:relative;}
-#headwrap .register{position:absolute; top:35px; right:2px;}
+#headwrap .login{position:absolute; top:35px; right:2px;}
 #footerwrap{}
 #main{background: #ddd;border-top:3px solid #ccc;}
 #mainwrap{padding:15px 0 0 0;position:relative;}
 #content{min-height: 280px;}
+
+#menu-top{position:absolute;top:36px;right:380px;text-align: right;}
+
 #menu-bottom ul{margin-top: 30px;}
 #menu-bottom ul li{float:left;margin-right:20px;}
 #menu-bottom ul li a{font-size:14px;}
@@ -73,11 +82,11 @@ small{font-size: 10px;}
 #media-block{margin-left: 10px;}
 #media-block li{min-height:220px; width:260px; border:1px solid #ccc;margin:0 15px;padding:15px;float:left;}
 
-#browse-sidebar{width:230px;padding:10px;}
-#browse-result{width:680px;min-height:400px;padding:10px 15px;background: #fff;margin-right: 15px;}
+#browse-sidebar, #account-sidebar{width:230px;padding:10px;}
+#browse-result, #account-details{width:680px;min-height:400px;padding:10px 15px;background: #fff;margin-right: 15px;}
 
 #browseform .browse-fields li{margin-bottom: 8px;}
-#browseform .browse-fields label{display: block;padding:4px 0;}
+#browseform .browse-fields label{display: block;padding:4px 0;width:auto;height:auto;float: none;text-align: left;}
 #browseform .browse-fields select{width:180px;height: 25px;}
 
 #browse-result .list-item{overflow: hidden;} 
@@ -119,29 +128,88 @@ small{font-size: 10px;}
 #band-details .info .play-track .top img{margin-left:20px;vertical-align: middle;}
 #band-details .info .play-track .top span{color:#50b535;font-weight: bold;}
 #band-details .info .play-track .list{margin:10px;padding:0 10px;}
-#band-details .info .likes{float:left; width:180px;min-height:200px; margin-right:25px;}
-#band-details .info .likes ul{margin:0 20px;}
-#band-details .info .likes ul li{padding:5px 0 5px 30px;background: url('../images/default/icons.png') -2px -91px no-repeat;}
+#band-details .info .badges{float:left; width:180px; margin-right:25px;}
+#band-details .info .badges ul{margin:0 20px;}
+#band-details .info .badges ul li,  .box .badges ul li{padding:5px 0 5px 30px;background: url('../images/default/icons.png') -2px -91px no-repeat;}
 #band-details .info .booking{float:left;width:220px;height:220px;background: #efefef;}
 #band-details .info .booking .wrap{padding:50px 20px 20px 40px;}
 #band-details .info .price{font-size: 24px;} 
 #booking-btn{background-color: #3363E1; color:#fff;font-size: 18px;width:120px;margin:10px 0 0 0;}
-#band-details .calendar{width:350px; height:220px; border:1px solid #ccc;float:left;margin:5px 20px 20px 20px;padding:10px;}
+#band-details .calendar{width:400px; height:340px; border:1px solid #ccc;float:left;margin:5px 20px 20px 20px;padding:10px;}
 #band-details .twitter{width:220px; padding:5px 20px 20px 20px; margin:4px 0 0 20px; border-left: 1px solid #ccc; border-right:1px solid #ccc;float:left;min-height: 220px;}
 
 /* FORM */
 form .item{margin:10px 0;}
 form label{display:block; float:left;width:280px;margin-right: 30px;text-align: right;font-weight: bold;height: 28px;}
+form .label{display:block; float:left;width:280px;margin-right: 30px;text-align: right;font-weight: bold;}
 form .item input.txt{border:1px solid #ccc;padding:4px 8px;width:220px;color:#777;}
 form .item select{border:1px solid #ccc;padding:4px 2px;color:#777;}
 form .item textarea{border: 1px solid #ccc; width:360px;padding:8px;color:#777;}
 form .item .text-lbl{font-size: 11px;font-style: italic;margin-left: 15px;color:#777;}
 form .item .idate{}
+form .item .error{font-size: 10px;margin-left: 8px;}
+form .item .name{font-size:18px;font-weight:bold;}
+form .item .amount{font-weight:bold;font-size: 1.2em;}
 form p{float:left;width:600px;}
 form .datewrap{position:relative;}
 form .datewrap input{padding-left: 40px !important;width:188px !important;}
 form .submit{background: #3871C1;color:#fff;outline:none;border:1px solid #777;font-weight: bold;}
 form .submit.disabled{background: #777;cursor:default;}
+form .title{color:#777;font-size:16px;}
+form .thumb{width:80px;height:80px;padding:4px;margin-right: 15px;border:1px solid #ddd;}
+form .thumb img{vertical-align: top;}
+form .thumb2{width:112px;height:112px;padding:4px;border:1px solid #aaa;}
+form .thumb2 a{width:112px;height:112px;overflow: hidden;display:block;}
+form h1{color:#aaa; font-size: 18px;}
+form h2, form .title{margin-left: 50px;}
+form .inf{font-size: 11px;font-style:italic;}
 
-#booking-form, #payment-form{padding:20px;background: #fff;}
+#booking-form, #payment-form, #registration-form, #login-form{padding:20px;background: #fff;}
 #payment-form .top{padding:20px;}
+#registration-form{position:relative;}
+#registration-form .top, #login-form .top{margin-bottom: 50px;padding-bottom:16px;border-bottom: 1px solid #ccc;}
+#registration-form .fcb, #login-form .fcb{text-align: center;width:400px;margin-left: 220px;}
+#registration-form .watermark{position:absolute;color:#ccc;font-size: 20px;font-family: Verdana;top:20px;right:20px;display:block;}
+
+.formcontent{font-family: Arial;color:#444;}
+.formcontent form label{width:140px}
+.formcontent form p {width:235px;}
+.formcontent form .item{position:relative;}
+.formcontent form textarea{width:220px;height:120px;font-family: Arial;font-size: 12px;}
+.formcontent form .submit{margin-right: 10px;padding:6px 10px;border:1px solid #777;cursor:pointer;text-align: center;}
+.formcontent .next{color:#3871C1;cursor: pointer;margin-left: 6px;}
+.formcontent form .promt{position:absolute;top:20px;left:50px;color:#aaa;font-size: 11px;}
+.formcontent form .calendar{width:350px; height:220px; padding:10px; border:1px solid #aaa;margin-left:50px;}
+
+
+#account-menu{background: #f0f0f0;position: relative;top:-14px;padding:0 2px;}
+#account-menu li{float:left;border-right:1px solid #fff;}
+#account-menu li.last{border-right-color: transparent;}
+#account-menu li a, #account-menu li span{padding:8px 15px;display:block} 
+#account-menu li span{background: #e0e0e0;cursor:default;}
+#account-menu li a:hover{background: #eaeaea;}
+
+#account-sidebar .photo, #account-sidebar .sub{width:180px;margin: 0 auto;}
+#account-sidebar .photo{padding:8px;border:1px solid #ccc;min-height: 180px;background: #fff;}
+#account-sidebar .photo img{width:180px;display: block;}
+#account-sidebar .sub{margin-top: 10px;}
+
+#account-details h2{margin-bottom:10px;}
+#account-details table{width:100%;color:#777;}
+#account-details table th{font-weight:bold;text-align: center;vertical-align:middle;border:1px solid #ddd;height:28px;}
+#account-details table td{padding:4px;}
+th.tB{width:200px;}
+th.tG{width:100px;}
+th.tL{width:150px;}
+#account-details #browse-result{padding:0;margin:0;width:auto;}
+#account-details .tab{background: #f0f0f0;margin: 15px 0;}
+#account-details .tab a{display:block;padding:8px 15px;float:left;}
+#account-details .tab a:hover{background:#eaeaea;}
+#account-details .tab a.active{background:#e0e0e0 !important;}
+
+#account-dashboard, #registration{background: #fff;min-height:500px;position: relative;}
+
+.box{background-color: #ddd;}
+.box .top{padding:10px;border-bottom: 1px solid #fff;}
+.box .list{margin:10px;padding:0 10px;}
+.box .bottom{padding:10px;border-top: 1px solid #fff;} 

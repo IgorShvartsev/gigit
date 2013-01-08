@@ -24,6 +24,13 @@ class Booking extends MX_Controller_Public {
         $this->load->view('booking', $data);
 	}
     
+    
+    public function confirm($userid = 0)
+    {
+        $userid = (int) $userid;
+        $this->load->view('booking_confirm'); 
+    }
+    
     protected function _postdata()
     {
         $data = $this->input->post('data');
@@ -31,7 +38,8 @@ class Booking extends MX_Controller_Public {
             return;
         }
         redirect('payment');
-    } 
+    }
+     
 }
  
 /* End of file booking.php */

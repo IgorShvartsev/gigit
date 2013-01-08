@@ -39,11 +39,12 @@
 */
 
 $route['default_controller'] = "main";
-$route['404_override'] = 'err/index/404';
-$route['err/([^/]*)']  = 'err/index/$1';
+$route['login']              = 'main/login';
+$route['404_override']       = 'err/index/404';
+$route['err/([^/]*)']        = 'err/index/$1';
 $route['band/booking/([^./]+).html'] = "band/booking/index/$1";
 $route['band/([^./]+).html'] = "band/index/$1";
-$route['([^.]+).html'] = "main/static_page/$1";
+$route['([^.]+).html']       = "main/static_page/$1";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -4,7 +4,6 @@ class Main extends MX_Controller_Public {
 
 	public function index()
 	{
-        //$this->layout->disable_layout();
 		$this->load->view('main');
 	}
     
@@ -15,12 +14,19 @@ class Main extends MX_Controller_Public {
         if ($staticPage) {
             $data = array(
                 'page'  => $page,
-                'title' => ''
+                'title' => $staticPage['title']
             );
             $this->load->view('static_page', $data);
         } else {
             redirect('err/404');
         }
+    }
+    
+    public function login()
+    {
+       $data = json_decode(Modules::run('auth/login'));
+       $this->layout->enable_layout();
+       $this->load->view('login', $data);
     }
 }
 
