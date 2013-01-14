@@ -7,7 +7,7 @@
     <meta name="description" content="<?=$meta_description;?>" />
     <link rel="stylesheet" href="<?=base_url('assets/css/style.css')?>" />
     <link rel="stylesheet" href="<?=base_url('assets/css/ui/jquery-ui-1.9.2.custom.min.css');?>" />
-    <script type="text/javascript" src="<?=base_url('resource/js');?>"></script> 
+    <script type="text/javascript" src="<?=base_url('resource/js?r='.rand(1000, 100000));?>"></script> 
 </head>
 <body>
     <header>

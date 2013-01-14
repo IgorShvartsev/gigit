@@ -28,6 +28,10 @@ class Users extends MX_Controller_Admin {
   
   public function fan($item = '')
   {
+      if (empty($item) && $this->input->get('p') && isXmlHttpRequest()) {
+          echo modules::run('admin/ajax/getall');
+          return;
+      }
       $data = array(
         'section' => 'fan',
         'item'    => $item

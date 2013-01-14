@@ -4,5 +4,8 @@
             </li> 
              <li <?=$menu == 'users' ? 'class="active"' : '';?>>
                 <a href="<?=base_url('admin/users/band');?>">Users</a>
-            </li>                 
+            </li> 
+             <li <?=$menu == 'booking' ? 'class="active"' : '';?>>
+                <a href="<?=base_url('admin/booking/bookings');?>">Bookings</a>
+            </li>                                 
         </ul>

@@ -106,8 +106,10 @@
        $(window).hashchange( function(){
             formName  = location.hash.substr(1).split('-')[0];
             $.post('/band/ajax/form/' + formName, {}, function(html){
+                var wnd = $(window);
                 popupDlg.dlg.find('form').remove();
                 popupDlg.dlg.is(':visible') ? popupDlg.hideLoader().form(html) : popupDlg.hideLoader().show(html);
+                popupDlg.dlg.css({'left' : (wnd.width() - popupDlg.dlg.width())/2, 'top' : (wnd.height() - popupDlg.dlg.height())/2});
             })
        }).hashchange();
        

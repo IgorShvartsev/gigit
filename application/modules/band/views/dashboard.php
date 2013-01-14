@@ -1,8 +1,8 @@
 <section id="main">
     <div id="mainwrap" class="clearfix grad-3 brd-lr shdw-3">
-        <div id="content">
+        <div id="content" class="clearfix">
             <?=partial('shared/menu', array('pagename' => 'dashboard'));?> 
-            <div id="account-sidebar" class="left">
+            <div id="account-sidebar" class="left clearfix">
                 <div class="photo">
                     <img src="<?=base_url('assets/images/'.THEME.'/nophoto.png');?>" alt="" />
                 </div>
@@ -45,6 +45,15 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <? foreach($bookings as $booking) {?>
+                            <tr>
+                                <td><?=$booking['first_name'] .' '. $booking['last_name'];?></td>
+                                <td><?=$booking['gig_date'];?></td>
+                                <td><?=$booking['city'];?></td>
+                                <td><?=is_array($booking['status_text']) ? $booking['status_text'][1] : $booking['status_text'];?></td>
+                                <td><?=$booking['status'] == BOOKINGS::STATUS_NEED_RESPONSE ? ('<a href="'.base_url('band/booking/confirm?code=' . $booking['code']) . '" class="link2">Confirm</a>'):($booking['status'] == BOOKINGS::STATUS_CONFIRMED ? ('<a href="#" class="link2 contact" data-contact="' . $booking['user_email']. '">Contact Fan</a>') : '');?></td>
+                            </tr>
+                            <? } ?>
                         </tbody>
                     </table>
                 </div>

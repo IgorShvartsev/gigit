@@ -1,6 +1,6 @@
 <section id="main">
     <div id="mainwrap" class="clearfix grad-3 brd-lr shdw-3">
-        <div id="content">
+        <div id="content" class="clearfix">
             <div id="browse-sidebar" class="left">
                 <form id="browseform" action="" method="get">
                     <ul class="browse-fields">
@@ -50,3 +50,4 @@
         </div>
     </div>
 </section>
+<script type="text/javascript">new FixScroll('#browse-sidebar');</script>

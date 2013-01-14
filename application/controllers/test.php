@@ -19,7 +19,8 @@ class Test extends MX_Controller {
     
     public function my()
     {
-       echo 'te';
+       $this->load->library('geocode');
+       print_r($this->geocode->getByZip('98370'));
     }
     
     public function calendar()

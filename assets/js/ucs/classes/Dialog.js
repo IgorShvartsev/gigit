@@ -68,8 +68,9 @@ ucs.Dialog = BaseClass.extend({
         
          $('<div/>',{
              'class':'close',
+             'title':'close',
              'css':$.extend(true, this.settings.cssClose, {'position':'absolute','text-align':'center','cursor':'pointer','title':'close'})
-         }).text('X').appendTo(this.dlg).click(function(){
+         }).text('×').appendTo(this.dlg).click(function(){
              $(this).parent().hide();
              !overlay.use || ucs.Helper.hideOverlay();
          });
@@ -117,9 +118,9 @@ ucs.Dialog = BaseClass.extend({
     
     show : function(){
         var wnd = $(window);
-        !this.settings.autoPosition || this.dlg.css({'left' : (wnd.width() - this.dlg.width())/2, 'top' : (wnd.height() - this.dlg.height())/2});
         !this.settings.overlay.use || ucs.Helper.showOverlay(this.settings.overlay.color, this.settings.overlay.opacity, this.settings.css['x-index'] - 1);
         this.dlg.show().find('.close').show().end().find('form').show().siblings().remove();
+        !this.settings.autoPosition || this.dlg.css({'left' : (wnd.width() - this.dlg.width())/2, 'top' : (wnd.height() - this.dlg.height())/2});
         return this;
     },
     hide : function(){

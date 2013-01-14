@@ -157,6 +157,21 @@ class Ajax extends MX_Controller {
             return;
         } 
         echo 'Failed';
+    }
+    
+    /**
+    * Get datepicker widget
+    * 
+    */
+    public function getdatepicker()
+    {
+        $id = (int) $this->input->get('id');
+        $data = array(
+            'band'          => array('id' => $id),
+            'inputName'     => str_replace(array("'", '"'), "", strip_tags($this->input->get('iname'))),
+            'modelCalendar' => $this->encrypt->encode('calendar', $this->sessionId)
+        );
+        $this->load->view('forms/datepicker', $data);
     } 
 }
 

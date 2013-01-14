@@ -120,7 +120,7 @@ class Fans extends MY_Model
             }         
             
             // GROUP BY 
-            $this->db->group_by('users.id');
+            //$this->db->group_by('users.id');
             
             // LIMIT  (pagination) 
             $page    = (int)$page ? (int)$page : 1;
@@ -155,8 +155,7 @@ class Fans extends MY_Model
      public function getTotal($where = array(), $where_or = array(), $search = '')
      {
             $where = $this->_makeWhere($where, $where_or, $search, true);
-            $this->db->from('(SELECT * FROM users ' . $where . '  
-                              GROUP BY users.id) AS users', false);
+            $this->db->from('users');
             return $this->db->count_all_results();
      }
      
@@ -256,4 +255,4 @@ class Fans extends MY_Model
      }
 } 
 /* End of file fans.php */
-/* Location: ./application/modules/fans/models/fans.php */    
+/* Location: ./application/modules/admin/models/fans.php */    

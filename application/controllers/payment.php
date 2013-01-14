@@ -2,10 +2,24 @@
 
 class Payment extends MX_Controller_Public {
 
+    protected $userdata = null;
+    
+    public function __construct()
+    {
+        $this->userdata = userLoggedIn();
+        if (!$this->userdata) {
+            redirect();
+        }
+        $this->load->model('payments');
+        parent::__construct();    
+    }
+    
 	public function index()
 	{
         $this->_postdata();
-        $this->load->view('payment');
+        $data['creditcard'] = $this->payments->getCreditCard($this->userdata['id']);
+        $data['states'] = $this->config->item('states');
+        $this->load->view('payment', $data);
 	}
     
     public function thanks()
@@ -19,9 +33,11 @@ class Payment extends MX_Controller_Public {
         if (!is_array($data)) {
             return;
         }
+        $this->payments->saveCreditCard($this->userdata['id'], $data);
         redirect('payment/thanks');
-    } 
+    }
+     
 }
 
-/* End of file payment.php */
-/* Location: ./application/controllers/payment.php */
+/* End of file payments.php */
+/* Location: ./application/controllers/payments.php */

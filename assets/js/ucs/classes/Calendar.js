@@ -61,7 +61,9 @@ ucs.Calendar = BaseClass.extend({
                 'name'  : 'csrf_protection',
                 'value' : ''
             },
-            'onEdit' : function(){}     // callback function (if editMode is true) 
+            'onLoad'       : function(){},// callback function when calendar is loaded completely 
+            'onDateSelect' : function(){},// callback function when click on selected day (if editMode is false)   
+            'onEdit'       : function(){} // callback function (if editMode is true) 
         };
         
         var self = this;
@@ -105,6 +107,7 @@ ucs.Calendar = BaseClass.extend({
             if ($.isPlainObject(data)) {
                 self.render(data);
                 self._hideOverlay();
+                self.settings.onLoad.call(self);
             }
         }, 'json').error(function(){self._hideOverlay();});
         return this;
@@ -141,7 +144,13 @@ ucs.Calendar = BaseClass.extend({
             $.each(week, function(day, val){
                 var d = day.split('-');
                 $('<div/>', {'class':'cday ' + val['class'] + ' ' + (!val.available ? 'unavailable' : '')}).data('day', day).html('<span class="dt">' + d[2] + '</span><span class="inf"></span><span class="st">' + (val.available ? ucs.language.AVAILABLE : ucs.language.UNAVAILABLE) + '</span>').appendTo(weeks).click(function(){
-                    if (!self.settings.editMode || $(this).hasClass('inactive')) return;
+                    var item = $(this);
+                    if (!self.settings.editMode || item.hasClass('inactive')) {
+                        if (!item.hasClass('unavailable') && !item.hasClass('inactive')) {
+                            self.settings.onDateSelect.call(this);
+                        }
+                        return;
+                    }
                     self.settings.onEdit.call(this);
                 });
             })

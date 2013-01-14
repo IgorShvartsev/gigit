@@ -15,13 +15,10 @@ $(function(){
         css  : {width : '550px'},
         name : 'popup',
         overlay : {use :true},
-        draggable : false     
+        draggable : true     
     }, function(dlg){
         dlg.find('.close').click();
     });
-    
-    // date picker
-    $(".date").datepicker({dateFormat: 'mm/dd/yy'});
     
     // label inside input and textarea
     $('input[type="text"], textarea').focus(function(){
@@ -52,6 +49,12 @@ $(function(){
         p.find(tab.attr('href')).show();
         return false;
     }); 
+    
+    // Contact
+    $('a.contact').click(function(){
+        promtDlg.show('<a href="mailto:' + $(this).data('contact') + '">' + $(this).data('contact') + '</a>');
+        return false;
+    })
     
 });
 

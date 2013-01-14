@@ -13,6 +13,9 @@
         font-size: 11px;
         background: #111;
     }
+    .gr{color:#6FAA7D;}
+    .or{color:#FFA40D;}
+    .rd{color:#D20404;}
     
     #wrapper{
         width:1100px;
@@ -260,8 +263,10 @@
         -moz-border-radius:4px;
         -webkit-border-radius:4px;
         border:1px solid #777;
+        margin: -2px;
     }
     textarea{font-family: arial;font-size: 12px;}
+    select{padding: 2px;border:1px solid #aaa;min-width: 180px;}
     input[type="submit"], button{
         background: rgb(255,255,255); /* Old browsers */
         background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%); /* FF3.6+ */
@@ -319,13 +324,38 @@
         text-align: center;
     }
     
+    .dataTable  .MId{
+        width:60px;
+        text-align: center;
+    }
+    
     .dataTable  .MName{
         width:140px;
         text-align: center;
     }
     
+    .dataTable  .MDate{
+        width:60px;
+        text-align: center;
+    }
+    
     .dataTable  .MEmail{
         width:160px;
+        text-align: center;
+    }
+    
+    .dataTable  .MLTime{
+        width:80px;
+        text-align: center;
+    }
+    
+    .dataTable  .MLocat{
+        width:100px;
+        text-align: center;
+    }
+    
+    .dataTable  .MStatus{
+        width:80px;
         text-align: center;
     }
     
@@ -412,7 +442,7 @@
     #send-overlay ul.sendtype li input{border:0 none;}
     
     form.search ul{list-style:none;margin:10px 0;overflow: hidden;width:auto;float:left;}
-    form.search ul li{float:left;padding-left:4px;}
+    form.search ul li{float:left;padding-left:4px;overflow: hidden;padding-bottom: 4px; padding-right: 4px;}
     form.search input.txt{width:180px;height:22px;line-height: 22px;padding:0 4px;color:#555;margin-top:4px;border:1px solid #ccc;}
     form.search label{display:block;float:left;}
     form.search label input{float:left;margin:0 4px;}
@@ -475,15 +505,15 @@
 }
 .error{color:#FFC0C0;}
 
-form .item{ margin: 15px 0; *zoom: 1;}
+form .item{font-size: 12px; margin: 15px 0; *zoom: 1;}
 form .item:before, form .item:after{ content: ""; display: table; }
 form .item:after{ clear: both; }
-form .item p{ margin: 0; padding: 0; }
-form .item label, #content form .item .lbl { width: 180px; float: left; padding-top: 5px; margin-bottom: 5px; }
+form .item p{ margin: 0; padding: 3px 0 0 0; color:#666;}
+form .item label, #content form .item .lbl { width: 180px; float: left; padding-top: 2px; margin-bottom: 5px;font-weight: bold;color:#444;}
 form .item input.txt { width: 178px; padding: 3px 10px; font-size: 12px; }
 form .item p.text{ padding-top: 5px; margin-bottom: 5px; }
 form .item p.error { /*height:30px;line-height: 30px;*/ color: #f00; font-size: 11px; }
-form .item p , form .item .p{ margin-left: 170px; }
+form .item p , form .item .p{ margin-left: 180px; }
 form .item p label{display: block;float: none;margin-left: 10px;margin-bottom: 0;color:#f00;font-size: 10px;}
 form .thumb{width:112px;height:112px;padding:4px;border:1px solid #aaa;}
 form .thumb a{width:112px;height:108px;display:block;overflow: hidden;}

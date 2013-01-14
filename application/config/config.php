@@ -50,6 +50,15 @@ $config['site_email'] = 'no-reply@gigit.com';
 
 /*
 |--------------------------------------------------------------------------
+| Admin Email
+|--------------------------------------------------------------------------
+|
+|
+*/
+$config['admin_email'] = 'genryh@yahoo.com';
+
+/*
+|--------------------------------------------------------------------------
 | URI PROTOCOL
 |--------------------------------------------------------------------------
 |
@@ -404,7 +413,7 @@ $config['theme'] = 'default';
 $config['resource']['js']  = array(
                             'jquery/jquery-1.7.1.min.js', 
                             'jquery/jquery-ui-1.9.2.custom.min.js',
-                            'jquery/jquery.ba-hashchange.min.js', 
+                            'jquery/jquery.ba-hashchange.min.js',
                              'ucs/ucs.js',
                              'ucs/classes/Dialog.js',
                              'ucs/classes/Promt.js',
@@ -412,7 +421,8 @@ $config['resource']['js']  = array(
                              'ucs/classes/Calendar.js',
                              'all.js',
                              'script.js',
-                             'html5.js'
+                             'html5.js',
+                             'fixedscroll.js'
                             );
 $config['resource']['css'] = array();
 

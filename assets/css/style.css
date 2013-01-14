@@ -19,12 +19,12 @@ img{border:0;}
 .brd{border:1px solid #aaa;}
 .brd-lr{border-left:1px solid #aaa;border-right:1px solid #aaa;}
 .span-bg{background: #ebebeb;padding: 1px 4px;}
-small, .small{font-size: 10px;}
 strong{font-weight:bold;}
 .text ol{list-style-type:decimal;margin:4px 0 4px 18px;}
 .text ol li{padding:2px 0;}
 .center{margin:0 auto;text-align: center;}
 .error{color:#f00;font-size:12px;padding:8px 0;}
+small, .small, small .error{font-size: 10px;}
 
 .link2{color:#3871C1;}
 
@@ -110,8 +110,8 @@ strong{font-weight:bold;}
 .dialog{-moz-border-radius: 5px; -webkit-border-radius: 5px;border-radius:5px;}
 .dialog .wrapper-dialog-ucs{background: url('../images/default/grey.png') repeat;font-family: Calibry;padding:12px;-moz-border-radius: 5px; -webkit-border-radius: 5px;border-radius:5px;}
 .dialog form{background: #fff;padding:15px;}
-.dialog .promt-no, .dialog .popup-no{display: none;}
-.dialog .promt-yes, .dialog .popup-yes{float:none;margin:0 auto;}
+.dialog .promt-no, .dialog .popup-no{display: none !important;}
+.dialog .promt-yes, .dialog .popup-yes{float:none;margin:0 auto; border:1px solid #ccc; color:#fff;background: #3871C1;}
 .dialog .close{visibility:hidden;}
 
 /* Band details */
@@ -142,12 +142,13 @@ strong{font-weight:bold;}
 form .item{margin:10px 0;}
 form label{display:block; float:left;width:280px;margin-right: 30px;text-align: right;font-weight: bold;height: 28px;}
 form .label{display:block; float:left;width:280px;margin-right: 30px;text-align: right;font-weight: bold;}
+form label sup{color: #f00;}
 form .item input.txt{border:1px solid #ccc;padding:4px 8px;width:220px;color:#777;}
 form .item select{border:1px solid #ccc;padding:4px 2px;color:#777;}
 form .item textarea{border: 1px solid #ccc; width:360px;padding:8px;color:#777;}
 form .item .text-lbl{font-size: 11px;font-style: italic;margin-left: 15px;color:#777;}
 form .item .idate{}
-form .item .error{font-size: 10px;margin-left: 8px;}
+form .item span.error, form .item em.error{font-size: 10px;margin-left: 8px;}
 form .item .name{font-size:18px;font-weight:bold;}
 form .item .amount{font-weight:bold;font-size: 1.2em;}
 form p{float:left;width:600px;}
@@ -163,6 +164,7 @@ form .thumb2 a{width:112px;height:112px;overflow: hidden;display:block;}
 form h1{color:#aaa; font-size: 18px;}
 form h2, form .title{margin-left: 50px;}
 form .inf{font-size: 11px;font-style:italic;}
+form p small{display: block;padding: 0 !important;margin:0 !important;}
 
 #booking-form, #payment-form, #registration-form, #login-form{padding:20px;background: #fff;}
 #payment-form .top{padding:20px;}
@@ -197,7 +199,8 @@ form .inf{font-size: 11px;font-style:italic;}
 #account-details h2{margin-bottom:10px;}
 #account-details table{width:100%;color:#777;}
 #account-details table th{font-weight:bold;text-align: center;vertical-align:middle;border:1px solid #ddd;height:28px;}
-#account-details table td{padding:4px;}
+#account-details table td{padding:4px 5px;font-size: 11px;}
+#account-details table td a{font-size: 11px;}
 th.tB{width:200px;}
 th.tG{width:100px;}
 th.tL{width:150px;}
@@ -213,3 +216,6 @@ th.tL{width:150px;}
 .box .top{padding:10px;border-bottom: 1px solid #fff;}
 .box .list{margin:10px;padding:0 10px;}
 .box .bottom{padding:10px;border-top: 1px solid #fff;} 
+
+.scroll-fixed{position:fixed;z-index:100;top:0;}
+.scroll-absolute{position:absolute;bottom:0;}

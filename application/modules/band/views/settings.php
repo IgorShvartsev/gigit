@@ -2,7 +2,7 @@
     <div id="mainwrap" class="clearfix grad-3 brd-lr shdw-3">
         <div id="content">
              <?=partial('shared/menu', array('pagename' => 'settings'));?>
-             <div id="account-dashboard">
+             <div id="account-dashboard" class="clearfix">
                 <br />
                 <form id="account-settings-form" method="post" action="<?=base_url('bands/settings');?>">
                       <div class="title"> 

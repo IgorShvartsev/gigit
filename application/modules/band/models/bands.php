@@ -167,7 +167,7 @@ class Bands extends MY_Model {
      }
      
      /**
-     * Get all pages due to criteria what exactly is needed
+     * Get all records due to criteria what exactly is needed
      * 
      * @param numeric $what
      * @return array
@@ -291,14 +291,21 @@ class Bands extends MY_Model {
      */
      public function getTotal($where = array(), $where_or = array(), $search = '')
      {
-            $where = $this->_makeWhere($where, $where_or, $search, true);
-            $this->db->from('(SELECT bands.*, genre FROM bands
-                              LEFT JOIN band_tracks ON band_tracks.band_id = bands.id
-                              LEFT JOIN band_images ON band_images.band_id = bands.id
-                              LEFT JOIN band_videos ON band_videos.band_id = bands.id
-                              LEFT JOIN band_genres ON band_genres.band_id = bands.id ' . $where . '  
-                              GROUP BY bands.id) AS bands', false);
-            return $this->db->count_all_results();
+            $where = $this->_makeWhere($where, $where_or, $search, true); 
+            $query = $this->db->query("SELECT COUNT(total) AS total FROM (
+                                SELECT COUNT(bands.id) AS total FROM bands
+                                LEFT JOIN band_tracks ON band_tracks.band_id = bands.id
+                                LEFT JOIN band_images ON band_images.band_id = bands.id
+                                LEFT JOIN band_videos ON band_videos.band_id = bands.id
+                                LEFT JOIN band_genres ON band_genres.band_id = bands.id " . $where . "  
+                                GROUP BY bands.id
+                              ) AS temp");
+            if ($query->num_rows() > 0) {
+                $row = $query->row_array();
+                return $row['total'];
+            } else {
+                return 0;
+            }
      }
      
      /**
@@ -322,6 +329,7 @@ class Bands extends MY_Model {
         if (!isset($data['email'])) {
             return 0;
         }
+        
         $res = $this->db->get_where('bands', array('email' => $data['email']))->result_array();
         if (count($res) > 0) {
             return $res[0];
@@ -342,6 +350,13 @@ class Bands extends MY_Model {
                                   ->from('bands')
                                   ->count_all_results();
         }
+          
+        if (isset($data['lat']) && isset($data['lng'])) {
+            $this->db->set('loc', "POINT(" . $data['lat']. "," . $data['lng'] . ")", false);   
+        } else {
+            $this->db->set('loc', "POINT(0,0)", false);
+        }
+        
         $this->db->insert('bands', $data);
         if ($seoExists) {
             $id = $this->db->insert_id();

@@ -1,6 +1,6 @@
 <section id="main">
     <div id="mainwrap" class="clearfix grad-3 brd-lr shdw-3">
-        <div id="content">
+        <div id="content" class="clearfix">
             <?=partial('shared/menu', array('pagename' => 'dashboard'));?> 
             <div id="account-sidebar" class="left">
                 <div class="photo">
@@ -25,6 +25,15 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <? foreach($bookings as $booking) {?>
+                            <tr>
+                                <td><?=$booking['name'];?></td>
+                                <td><?=$booking['gig_date'];?></td>
+                                <td><?=$booking['city'];?></td>
+                                <td><?=is_array($booking['status_text']) ? $booking['status_text'][0] : $booking['status_text'];?></td>
+                                <td><?=$booking['status'] == BOOKINGS::STATUS_COMPLETED ? ('<a href="'. base_url('band/booking/' . $booking['seo']. '.html').'" class="link2">Rebook</a>'):($booking['status'] == BOOKINGS::STATUS_CONFIRMED ? '<a href="#" class="link2 contact" data-contact="' . $booking['band_email'] . '">Contact Band</a>' : '');?></td>
+                            </tr>
+                            <? } ?>
                         </tbody>
                     </table>
                 </div>
@@ -59,3 +68,4 @@
         </div>
     </div>
 </section>
+<script type="text/javascript">new FixScroll('#account-sidebar', {top: 30});</script>

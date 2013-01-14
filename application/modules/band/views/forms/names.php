@@ -16,7 +16,7 @@
   <div class="item clearfix">
     <label></label>
     <p>
-        <button type="button" class="submit inline">Continue</button> or <span class="next" data-next="footprint">Skip this step</span>
+        <button type="button" class="submit inline">Continue</button> or <span class="next" data-next="address">Skip this step</span>
     </p>
   </div>
   

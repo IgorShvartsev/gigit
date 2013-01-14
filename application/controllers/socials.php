@@ -63,17 +63,29 @@ class Socials extends MX_Controller {
             // accept operation 
             try
             {
-                $code = $this->input->get('code') ? $this->input->get('code') :  $this->input->get('oauth_token');                            
-                $token = $provider->access($code);
-                $user = $provider->get_user_info($token);
+                $code    = $this->input->get('code') ? $this->input->get('code') :  $this->input->get('oauth_token');                            
+                $token   = $provider->access($code);
+                $user    = $provider->get_user_info($token);
+                // check geo data
+                $geodata = array();
+                if (isset($user['location'])) {
+                    $this->load->library('geocode');
+                    $point = $this->geocode->getByAddress($user['location']);
+                    if (isset($point['result'])) {
+                        $geodata = $this->geocode->getByPoint($point['result']['lat'], $point['result']['lng']);
+                        $geodata = !isset($geodata['error']) ? $geodata['result'] : array(); 
+                    }
+                }
                 $this->session->set_userdata($social, array(
                     'access_token' => $token->access_token, 
-                    'expires_in'   => $token->expires_in,
-                    'user'         => (array)$user
+                    'expires'      => $token->expires,
+                    'user'         => array_merge((array)$user, $geodata) 
                 ));
                 
+
                 //print_r($token);
-               
+                //die();
+                
                // redirect and close 
                echo '<script type="text/javascript">
                             opener.location.href="' . base_url($this->session->userdata('redirect')) . '";
@@ -82,7 +94,7 @@ class Socials extends MX_Controller {
             }
             catch (OAuth2_Exception $e)
             {
-                show_error('Something wrong: '.$e);
+                show_error('Something wrong: ' . $e);
             }
          }
     }

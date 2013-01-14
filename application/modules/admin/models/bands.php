@@ -142,7 +142,7 @@ class Bands extends MY_Model {
             }         
             
             // GROUP BY 
-            $this->db->group_by('bands.id');
+            //$this->db->group_by('bands.id');
             
             // LIMIT  (pagination) 
             $page    = (int)$page ? (int)$page : 1;
@@ -177,8 +177,7 @@ class Bands extends MY_Model {
      public function getTotal($where = array(), $where_or = array(), $search = '')
      {
             $where = $this->_makeWhere($where, $where_or, $search, true);
-            $this->db->from('(SELECT * FROM bands ' . $where . '  
-                              GROUP BY bands.id) AS bands', false);
+            $this->db->from('bands');
             return $this->db->count_all_results();
      }
      

@@ -2,10 +2,13 @@
 
 class Band extends MX_Controller_Public {
 
+    protected $banddata = null;
+    
     public function __construct()
     {
         $this->sessionId = $this->session->userdata('session_id'); 
         $this->load->model('bands');
+        $this->banddata = bandLoggedIn();
         parent::__construct();    
     }
     
@@ -29,14 +32,13 @@ class Band extends MX_Controller_Public {
     
     public function profile()
     {
-        $loggedBand = bandLoggedIn();
-        if (!$loggedBand) {
+        if (!$this->banddata) {
             redirect('');
         }    
-        $data['band'] = $loggedBand;
+        $data['band'] = $this->banddata;
         $data['profile'] = 1;
         $jsParams = array(
-            'id'      => $loggedBand['id'],
+            'id'      => $this->banddata['id'],
             'model'   => $this->encrypt->encode('calendar', $this->sessionId)
         );
         $data['jsparams']  = base64_encode($this->encrypt->encode(serialize($jsParams), $this->sessionId));
@@ -45,7 +47,12 @@ class Band extends MX_Controller_Public {
     
     public function dashboard()
     {
-        $this->load->view('dashboard');
+        if (!$this->banddata) {
+            redirect('');
+        }    
+        $this->load->model('bookings');
+        $data['bookings'] = $this->bookings->getData(array('band_id' => $this->banddata['id']), null, null, 1, 10);
+        $this->load->view('dashboard', $data);
     }
     
     public function gigs()
