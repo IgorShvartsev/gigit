@@ -6,7 +6,7 @@
         <form id="homebooking" class="shdw-5" action="<?=base_url('band/browse');?>" method="post">
             <span class="tb">Book your gig now <span class="tc">&raquo;</span></span>
             <div class="field inline">
-                <input type="text" name="zip" value=" " />
+                <input type="text" name="zip" value="" />
             </div>
             <input type="submit" class="submit" value=" Gigit Now!" />
         </form>

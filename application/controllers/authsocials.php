@@ -1,12 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Socials extends MX_Controller {
+class Authsocials extends MX_Controller {
     
     protected $scope = array(
-        'facebook' => array('user_photos','user_birthday','email','user_location')
+        'facebook'   => array('user_photos','user_birthday','email','user_location')
     );
     
-    protected $socials = array('facebook');
+    protected $socials = array('facebook', 'soundcloud');
     
     public function __construct()
     {
@@ -30,7 +30,7 @@ class Socials extends MX_Controller {
          $scope     = $this->input->get('scope');
          if (!empty($redirect)) {
             $this->session->set_userdata('redirect', $redirect); 
-            redirect('socials/provider/' . $social);
+            redirect('authsocials/provider/' . $social);
             exit();
          }
          $config = $this->config->item($social);
@@ -41,7 +41,7 @@ class Socials extends MX_Controller {
              $config['scope'] = $this->scope[$social];
          }
          $params = array();
-         if ($social == 'facebook') {
+         if ($social == 'facebook' || $social == 'soundcloud') {
              $params['display']     = 'popup';
          } 
          
@@ -78,19 +78,22 @@ class Socials extends MX_Controller {
                 }
                 $this->session->set_userdata($social, array(
                     'access_token' => $token->access_token, 
+                    'refresh_token'=> $token->refresh_token,
                     'expires'      => $token->expires,
                     'user'         => array_merge((array)$user, $geodata) 
                 ));
                 
-
-                //print_r($token);
-                //die();
-                
-               // redirect and close 
-               echo '<script type="text/javascript">
-                            opener.location.href="' . base_url($this->session->userdata('redirect')) . '";
-                            window.close();
-                       </script>';
+                $redirectUrl = base_url(str_replace(';', '#', $this->session->userdata('redirect')));
+               
+               // redirect(refresh) and close popup
+               echo '<script type="text/javascript">';
+               if (strpos($redirectUrl, '#') === TRUE) {
+                    echo 'opener.location.href="' . $redirectUrl . '";';
+               } else {
+                    echo  'opener.location.reload();';
+               }
+                    echo 'window.close();
+                    </script>';
             }
             catch (OAuth2_Exception $e)
             {

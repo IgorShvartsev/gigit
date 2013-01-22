@@ -443,6 +443,15 @@ $config['perpage'] = 5;
 $config['facebook']['id']     = '391243610960072';
 $config['facebook']['secret'] = 'd55f71bc66eae68247cccecad10f77bf';
 
+/*
+|--------------------------------------------------------------------------
+| Soundcloud Credentials
+|--------------------------------------------------------------------------
+|
+*/
+$config['soundcloud']['id']     = '45ed9afa0f29f409fb0224fa334c72da';
+$config['soundcloud']['secret'] = '8945dacf45be19a51199972818f7c292';
+
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

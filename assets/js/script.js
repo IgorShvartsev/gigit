@@ -15,7 +15,7 @@ $(function(){
         css  : {width : '550px'},
         name : 'popup',
         overlay : {use :true},
-        draggable : true     
+        draggable : false     
     }, function(dlg){
         dlg.find('.close').click();
     });

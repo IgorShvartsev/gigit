@@ -95,6 +95,7 @@
     </div>
 <section id="main">
 <? if (bandLoggedIn() && isset($profile)) {?>
+<script type="text/javascript" src="<?=base_url('assets/js/jquery/jquery.validate.js');?>"></script>
 <script type="text/javascript">
     $(function(){ 
        var formName = null;
@@ -105,11 +106,28 @@
         
        $(window).hashchange( function(){
             formName  = location.hash.substr(1).split('-')[0];
-            $.post('/band/ajax/form/' + formName, {}, function(html){
+            $.post('<?=base_url('band/ajax/form');?>' + '/' + formName, {}, function(html){
                 var wnd = $(window);
                 popupDlg.dlg.find('form').remove();
                 popupDlg.dlg.is(':visible') ? popupDlg.hideLoader().form(html) : popupDlg.hideLoader().show(html);
                 popupDlg.dlg.css({'left' : (wnd.width() - popupDlg.dlg.width())/2, 'top' : (wnd.height() - popupDlg.dlg.height())/2});
+                popupDlg.dlg.find('form[id!="form-tracks"]').validate({
+                    errorElement: 'em',
+                    errorPlacement: function(error, el) {
+                        error.insertAfter(el);
+                    },
+                    submitHandler: function(frm) {
+                        $('input, textarea, select', frm).each(function(){
+                            var el = $(this);
+                            if (el.attr('data') != undefined && el.attr('data') == el.val()) {
+                                el.val('');
+                            } 
+                        })
+                        $.post('<?=base_url('band/ajax/submitform');?>', $(frm).serialize(), function(data){
+                            data.result ? popupDlg.dlg.find('.next').click() : alert(data.error);
+                        }, 'json');
+                    }
+                });
             })
        }).hashchange();
        

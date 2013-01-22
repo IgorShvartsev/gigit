@@ -3,6 +3,9 @@
         <div id="content" class="clearfix">
             <div id="browse-sidebar" class="left">
                 <form id="browseform" action="" method="get">
+                    <? if (!empty($zip)) { ?>
+                        <input type="hidden" name="zip" value="<?=$zip?>" />
+                    <? } ?>
                     <ul class="browse-fields">
                         <li>
                             <label>Showing</label>

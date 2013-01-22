@@ -15,7 +15,7 @@
                 
                 <div class="fcb">
                     <span class="title">By Facebook</span> <br /><br />
-                    <a href="<?=base_url('socials/provider/facebook?redirect=registration/' . $type);?>" onclick="window.open(this.href, 'auth', 'width=600,height=400'); return false;"><img src="<?=base_url('assets/images/default/ifacebook.png')?>" alt="facebook" /></a>
+                    <a href="<?=base_url('authsocials/provider/facebook?redirect=registration/' . $type);?>" onclick="window.open(this.href, 'auth', 'width=600,height=400'); return false;"><img src="<?=base_url('assets/images/'.THEME.'/ifacebook.png')?>" alt="facebook" /></a>
                     <br /><br />
                     <span class="title">OR</span>
                     <br /><br />

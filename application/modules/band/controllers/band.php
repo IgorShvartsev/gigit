@@ -64,6 +64,23 @@ class Band extends MX_Controller_Public {
     {
         $this->load->view('settings');
     }
+    
+    public function soundcloud($action = null)
+    {   
+        $this->layout->disable_layout();
+        $soundcloud = $this->session->userdata('soundcloud');
+        $config = $this->config->item('soundcloud');
+        if (!$soundcloud) {
+            redirect();
+        }
+        switch ($action) {
+            case 'quickform':
+                print_r($soundcloud);
+                break;
+            default:
+                redirect();
+        }
+    } 
 }
 
 /* End of file band.php */

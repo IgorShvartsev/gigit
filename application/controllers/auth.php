@@ -64,6 +64,7 @@ class Auth extends MX_Controller {
     {
         $this->session->unset_userdata('logindata');
         $this->session->unset_userdata('facebook');
+        $this->session->unset_userdata('soundcloud');
         redirect();
     }
     

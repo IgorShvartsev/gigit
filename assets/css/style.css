@@ -163,6 +163,8 @@ form .thumb2{width:112px;height:112px;padding:4px;border:1px solid #aaa;}
 form .thumb2 a{width:112px;height:112px;overflow: hidden;display:block;}
 form h1{color:#aaa; font-size: 18px;}
 form h2, form .title{margin-left: 50px;}
+form h4{color:#aaa;font-size: 14px;padding-left:35px; margin-bottom: 15px;}
+form h4 i{font-size: 10px; font-style: italic;}
 form .inf{font-size: 11px;font-style:italic;}
 form p small{display: block;padding: 0 !important;margin:0 !important;}
 
@@ -219,3 +221,5 @@ th.tL{width:150px;}
 
 .scroll-fixed{position:fixed;z-index:100;top:0;}
 .scroll-absolute{position:absolute;bottom:0;}
+
+.soundcloud.track-list{height:130px;overflow-y: auto;}

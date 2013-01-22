@@ -5,7 +5,9 @@
 */
 class Bands extends MY_Model {
     
-     protected $fields = array(); 
+     protected $fields = array();
+     
+     protected $search_distance = 300; // km 
      /**
      * Constructor
      *    
@@ -180,9 +182,15 @@ class Bands extends MY_Model {
             $tracks      = array();
             $videos      = array();
             $tags        = array();
+            $disnance    = '';
+            
+            $geo_position = $this->session->userdata('geo_position');
+            if ($geo_position) {
+                $distance = 'round(glength(linestringfromwkb(linestring(POINT(' . $geo_position['lat'] . ', ' . $geo_position['lng'] . '), loc)))) * 100 AS dist';
+            }
             
             // SELECT
-            $this->db->select('bands.*')
+            $this->db->select('bands.* '.(empty($distance) ? '' : (',' . $distance)), FALSE)
                      ->from('bands')
                      ->join('band_tracks', 'band_tracks.band_id = bands.id', 'left')
                      ->join('band_images', 'band_images.band_id = bands.id', 'left')
@@ -207,6 +215,11 @@ class Bands extends MY_Model {
             
             // GROUP BY 
             $this->db->group_by('bands.id');
+            
+            // HAVING
+            if ($geo_position) {
+                $this->db->having('dist <=', $this->search_distance);
+            }
             
             // LIMIT  (pagination) 
             $page    = (int)$page ? (int)$page : 1;
@@ -290,15 +303,23 @@ class Bands extends MY_Model {
      * @param mixed $serach
      */
      public function getTotal($where = array(), $where_or = array(), $search = '')
-     {
+     {      
+            $distance = '';
+            $having   = '';
+            $geo_position = $this->session->userdata('geo_position');
+            if ($geo_position) {
+                $distance = 'round(glength(linestringfromwkb(linestring(POINT(' . $geo_position['lat'] . ', ' . $geo_position['lng'] . '), loc)))) * 100 AS dist';
+                $having   = "HAVING dist <= " .$this->search_distance;
+            }
             $where = $this->_makeWhere($where, $where_or, $search, true); 
             $query = $this->db->query("SELECT COUNT(total) AS total FROM (
-                                SELECT COUNT(bands.id) AS total FROM bands
+                                SELECT COUNT(bands.id) AS total " .(empty($distance) ? '' : (',' . $distance)) . " FROM bands
                                 LEFT JOIN band_tracks ON band_tracks.band_id = bands.id
                                 LEFT JOIN band_images ON band_images.band_id = bands.id
                                 LEFT JOIN band_videos ON band_videos.band_id = bands.id
                                 LEFT JOIN band_genres ON band_genres.band_id = bands.id " . $where . "  
                                 GROUP BY bands.id
+                                $having
                               ) AS temp");
             if ($query->num_rows() > 0) {
                 $row = $query->row_array();
@@ -377,6 +398,34 @@ class Bands extends MY_Model {
          $this->db->where('id', $id);
          $this->db->update('bands', array('active' => 1));
      }
+     
+     /**
+     * Save data
+     * 
+     * @param numeric $id
+     * @param array $data
+     */
+     public function save($id, $data)
+     {
+          $data = $this->_validate($data);
+          if (count($data) > 0) {
+              if (isset($data['lat']) && isset($data['lng'])) {
+                    $this->db->set('loc', "POINT(" . (float)$data['lat']. "," . (float)$data['lng'] . ")", false);   
+              } else if (isset($data['lat']) || isset($data['lng'])){
+                    $band = $this->getAccount($id);
+                    if (!$band) {
+                        return false;
+                    }
+                    isset($data['lat']) ?  $this->db->set('loc', "POINT(" . (float)$data['lat'] . "," . $band['lng'] . ")", false) : $this->db->set('loc', "POINT(" . $band['lat'] . "," . (float)$data['lng'] . ")", false);
+              }
+              
+              $this->db->where('id', $id)
+                       ->update('bands', $data);
+              return true; 
+          }
+          return false;
+     }
+     
      
      
      protected function _validate($data)

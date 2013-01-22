@@ -15,8 +15,26 @@ class Browse extends MX_Controller_Public {
         $data['p']      = $this->input->get('p');
         $data['sort']   = $this->input->get('sort');
         $data['show']   = $this->input->get('show');
+        $data['zip']    = (int)$this->input->get_post('zip');
+        if ($data['zip']) {
+            // get geo data from ZIP and save into session
+            $geo_position = $this->session->userdata('geo_position');
+            if (!$geo_position || ($geo_position && $geo_position['zip'] != $data['zip'])) {
+                $this->load->library('geocode');
+                $res = $this->geocode->getByZip($data['zip']);
+                if (isset($res['result'])) {
+                    $this->session->set_userdata('geo_position', array(
+                        'zip'    => $data['zip'],
+                        'lat'    => $res['result']['lat'],
+                        'lng'    => $res['result']['lng']
+                    ));
+                } 
+            }
+        } else {
+            $this->session->unset_userdata('geo_position');
+        }
         $data['bands']  = $this->bands->getAll(
-                $this->input->get(NULL, TRUE), 
+                $this->input->get_post(NULL, TRUE), 
                 $data['total']
         );
 		$this->load->view('browse', $data);

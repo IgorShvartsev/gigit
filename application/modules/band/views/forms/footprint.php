@@ -1,5 +1,5 @@
 <form>
-  <input type="hidden" namr="action" value="footprint" />   
+  <input type="hidden" name="action" value="footprint" />   
   <h2>Your Sound Footprint</h2> 
   <br />
   <div class="item clearfix">
@@ -16,7 +16,7 @@
                         $temp = array();
                         $i = 1; 
                     }
-                    $temp[] = '<td><input type="checkbox" name="genre[]" value="' . $genre['id'] . '" /> ' . $genre['name'] . '</td>';
+                    $temp[] = '<td><input type="checkbox" name="data[genres][]" value="' . $genre['id'] . '" '  . (in_array($genre['name'], $band['genres']) ? 'checked="checked"' : '') . ' /> ' . $genre['name'] . '</td>';
                 }
                 $count = count($temp);
                 if ($count > 0) {;
@@ -33,17 +33,56 @@
   
   <div class="item clearfix">
     <label>Bands you resemble:</label>
-    <p><input type="text" class="txt" name="data['tags']" value="" /></p>
+    <p><input type="text" class="txt" name="data[tags]" value="<?=implode(',', $band['tags']);?>" /></p>
   </div>   
 
   <div class="item clearfix">
     <label></label>
     <p>
-        <button type="button" class="submit inline">Continue</button> or <span class="next" data-next="tracks">Skip this step</span>
+        <button type="submit" class="submit inline">Continue</button> or <span class="next" data-next="tracks">Skip this step</span>
     </p>
   </div>
   
   </form>
-<script type="text/javascript">
-        //alert('Ups');
-</script>
+  
+  <script type="text/javascript">
+    $(function(){
+        $('input[name="data[tags]"]').autocomplete({
+            source : function(request, response){
+                $.getJSON('<?=base_url('band/ajax/autocomplete/tags')?>',{
+                    term: extractLast( request.term )
+                }, response );
+            },
+            search : function() {
+                var term = extractLast( this.value );
+                if ( term.length < 2 ) {
+                    return false;
+                }
+            },
+            focus : function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select : function( event, ui ) {
+                  var terms = split( this.value );
+                  terms.pop();
+                  terms.push( ui.item.value );
+                  terms.push( "" );
+                  this.value = terms.join( ", " );
+                  return false;
+            }
+        }).bind('keyup', function(e){
+            if (e.which == $.ui.keyCode.TAB && $(this).data('autocomplete').menu.active) {
+                return false;
+            }
+        });
+        
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+    })
+  </script>

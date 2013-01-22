@@ -135,29 +135,32 @@ class Ajax extends MX_Controller {
     }
     
     /**
-    * Get form
+    * Auto complete 
     * 
-    * @param string $name - name of the form
     */
-    public function form($name = '')
+    public function autocomplete($model = '')
     {
-        $loggedBand = bandLoggedIn();
-        if ($loggedBand) {
-            $this->load->model('bands');
-            $data = array(
-                'band'   => $this->bands->get($loggedBand['id'], false),
-                'genres' => $this->bands->getGenres(),
-                'modelCalendar' => $this->encrypt->encode('calendar', $this->sessionId) 
-            );
-            if (file_exists(APPPATH.'modules/band/views/forms/'.$name.'.php')) {
-                $this->load->view('forms/' .$name, $data);
-            } else if (file_exists(APPPATH.'modules/band/views/forms/names.php')) {
-                $this->load->view('forms/names', $data);
-            } 
-            return;
-        } 
-        echo 'Failed';
+        $data = array();
+        $listLimit = 12;
+        $term = $this->input->get_post('term');
+        $list = array();
+        if (strlen($term) >= 2) {
+            if ($model == 'tags') {
+                $this->load->model('tags');
+                $list = $this->tags->getData(null, null, null, 1, $listLimit, array('tag' => $term));
+                foreach($list as $i => $row) {
+                    $data[] = array(
+                        'i' => $i,
+                        'label' => $row['tag'],
+                        'value' => $row['tag']
+                    );
+                } 
+            }
+        }
+       $this->output->set_content_type('application/json')  
+                    ->set_output(json_encode($data));
     }
+    
     
     /**
     * Get datepicker widget
@@ -173,6 +176,145 @@ class Ajax extends MX_Controller {
         );
         $this->load->view('forms/datepicker', $data);
     } 
+    
+    /**
+    * Get form
+    * 
+    * @param string $name - name of the form
+    */
+    public function form($name = '')
+    {
+        $loggedBand = bandLoggedIn();
+        if ($loggedBand) {
+            $this->load->model('bands');
+            $data = array(
+                'band'   => $this->bands->get($loggedBand['id'], false),
+                'genres' => $this->bands->getGenres(),
+                'modelCalendar' => $this->encrypt->encode('calendar', $this->sessionId) 
+            );
+            if (file_exists(APPPATH.'modules/band/views/forms/'.$name.'.php')) {
+                if ($name == 'tracks' && $this->session->userdata('soundcloud')) {
+                    $data['soundcloud'] = true;
+                }
+                $this->load->view('forms/' .$name, $data);
+            } else if (file_exists(APPPATH.'modules/band/views/forms/names.php')) {
+                $this->load->view('forms/names', $data);
+            } 
+            return;
+        } 
+        echo 'Failed';
+    }
+    
+    /**
+    * Submitting form
+    * 
+    */
+    public function submitform()
+    {
+        $loggedBand = bandLoggedIn();
+        $action = $this->input->post('action');
+        if ($loggedBand) {
+            if ($action) {
+                $error = '';
+                if ($this->_validateForm($error)) {
+                    $data = $this->_saveFormData($loggedBand['id'], $action, $this->input->post('data'));
+                } else {
+                    $data['error'] = $error;
+                }
+            } else {
+                $data['error'] = 'Action is not defined'; 
+            }
+        } else {
+            $data['error'] = 'Forbidden';
+        }
+        $this->output->set_content_type('application/json')  
+                     ->set_output(json_encode($data));
+    }
+    
+    /**
+    * Validate post data  of submitted form
+    * 
+    */
+    protected function _validateForm(&$error)
+    {
+        $this->load->library('form_validation');
+        
+        $data = $this->input->post('data');
+        !element('name', $data, NULL)        || $this->form_validation->set_rules('data[name]',  'Band name', 'trim|required|max_length[50]');
+        !element('description', $data, NULL) || $this->form_validation->set_rules('data[description]', 'Band description', 'trim|max_length[500]');
+        !element('zip', $data, NULL)         || $this->form_validation->set_rules('data[zip]', 'ZIP', 'trim|required|numeric|max_length[8]|');
+        !element('distance', $data, NULL)    || $this->form_validation->set_rules('data[distance]', 'Distance', 'trim|numeric|max_length[5]|');
+        !element('tags', $data, NULL)        || $this->form_validation->set_rules('data[tags]', 'Tags', 'trim');
+        !element('genres', $data, NULL)      || $this->form_validation->set_rules('data[genres]', 'Genres', 'trim');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $error = strip_tags(validation_errors());
+            return empty($error);
+        }
+        
+        return true;
+    }
+    
+    /**
+    * Save form data 
+    * 
+    * @param numeric $id     - id of Band
+    * @param string $action  - what action should be done to save form data
+    * @param array $data     - form data
+    * @return array
+    */
+    protected function _saveFormData($id, $action, $data) 
+    {
+        if (!is_array($data) || count($data) == 0 ) {
+            return array('error' => 'Incorrect data');
+        }
+        $this->load->model('bands');
+        switch($action) {
+            case 'names':
+                $res = $this->bands->save($id, $data);
+                break;
+            case 'address':
+                $this->load->library('geocode');
+                $data = $this->input->post('data');
+                $res = $this->geocode->getByZip(trim($data['zip']));
+                if (isset($res['error'])) {
+                    return $res;
+                }
+                $res = $this->bands->save($id, array_merge($data, $res['result']));
+                break;
+            case 'footprint':
+                $data = $this->input->post('data');
+                if ($data) {
+                    // save genres
+                    $genreIds = isset($data['genres']) && is_array($data['genres']) ? $data['genres'] : array();
+                    $this->load->model('genres');
+                    $this->genres->save($id, $genreIds);
+                    // save tags
+                    $this->load->model('tags');
+                    $this->tags->save($id, isset($data['tags']) ? $data['tags'] : '');
+                    $res = true;
+                } else {
+                    $res = false;
+                }
+                break;
+            case 'tracks':
+                $data = $this->input->post('data');
+                $this->load->model('tracks');
+                if (isset($data['track']) && is_array($data['track'])) {
+                    foreach($data['track'] as $track) {
+                        $track = unserialize(base64_decode($track));
+                        if(is_array($track)) {
+                            $this->tracks->save($id, $track);
+                        }
+                    }
+                } else {
+                    $this->tracks->deleteSoundcloudTracks($id);
+                } 
+                $res = true;
+                break;
+        }
+        return $res ? array('result' => 'Saved') : array('error' => 'Incorrect data');     
+    }
 }
 
 /* End of file ajax.php */
